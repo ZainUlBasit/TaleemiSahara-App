@@ -2,6 +2,23 @@
 session_start();
 require_once 'config/database.php';
 
+if (isset($_SESSION['user_id'])) {
+    switch ($_SESSION['user_type']) {
+        case 'student':
+            header("Location: dashboard/student.php");
+            exit();
+        case 'donor':
+            header("Location: dashboard/donor.php");
+            exit();
+        case 'mentor':
+            header("Location: dashboard/mentor.php");
+            exit();
+        default:
+            header("Location: index.php");
+            exit();
+    }
+}
+
 $error = '';
 $success = '';
 
@@ -25,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result->num_rows > 0) {
             $error = "Email already exists";
         } else {
@@ -33,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $hashed_password = hashPassword($password);
             $stmt = $conn->prepare("INSERT INTO users (name, email, password, user_type) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("ssss", $name, $email, $hashed_password, $user_type);
-            
+
             if ($stmt->execute()) {
                 $success = "Registration successful! Please login.";
                 header("refresh:2;url=login.php");
@@ -48,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -115,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="register-container">
         <h2>Create an Account</h2>
@@ -124,28 +143,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php if ($success): ?>
             <div class="success-message"><?php echo $success; ?></div>
         <?php endif; ?>
-        
+
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
             <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="user_type">I am a</label>
                 <select id="user_type" name="user_type" required>
@@ -155,10 +174,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="mentor" <?php echo isset($_GET['type']) && $_GET['type'] == 'mentor' ? 'selected' : ''; ?>>Mentor</option>
                 </select>
             </div>
-            
+
             <button type="submit" class="register-btn">Create Account</button>
         </form>
-        
+
         <div class="login-link">
             Already have an account? <a href="login.php">Login here</a>
         </div>
@@ -166,4 +185,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="js/main.js"></script>
 </body>
-</html> 
+
+</html>

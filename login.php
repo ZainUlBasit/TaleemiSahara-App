@@ -2,6 +2,23 @@
 session_start();
 require_once 'config/database.php';
 
+if (isset($_SESSION['user_id'])) {
+    switch ($_SESSION['user_type']) {
+        case 'student':
+            header("Location: dashboard/student.php");
+            exit();
+        case 'donor':
+            header("Location: dashboard/donor.php");
+            exit();
+        case 'mentor':
+            header("Location: dashboard/mentor.php");
+            exit();
+        default:
+            header("Location: index.php");
+            exit();
+    }
+}
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -131,34 +148,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-    <div class="login-container">
-        <h2>Welcome Back</h2>
-        <?php if ($error): ?>
-            <div class="error-message"><?php echo $error; ?></div>
-        <?php endif; ?>
+    <section id="hero" class="hero-section">
+        <div
+            class="hero-overlay"
+            style="
+            background-image: url('images/bgimage.jpg');
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            z-index: 1;
+          "></div>
+        <div
+            class="hero-overlay"
+            style="
+            background-color: black;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            z-index: 1;
+          "></div>
+        <div
+            class="hero-overlay"
+            style="
+            background-color: white;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+          "></div>
+        <div class="login-container" style="position: relative; z-index: 2">
+            <h2>Welcome Back</h2>
+            <?php if ($error): ?>
+                <div class="error-message"><?php echo $error; ?></div>
+            <?php endif; ?>
 
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="forgot-password.php">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+
+            <div class="register-link">
+                Don't have an account? <a href="register.php">Register here</a>
             </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-
-            <div class="forgot-password">
-                <a href="forgot-password.php">Forgot Password?</a>
-            </div>
-
-            <button type="submit" class="login-btn">Login</button>
-        </form>
-
-        <div class="register-link">
-            Don't have an account? <a href="register.php">Register here</a>
         </div>
-    </div>
+    </section>
 
     <script src="js/main.js"></script>
 </body>
