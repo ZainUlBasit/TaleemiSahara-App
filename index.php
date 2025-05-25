@@ -50,14 +50,15 @@ if (isset($_SESSION['user_id'])) {
           <li><a href="#students">Students</a></li>
           <li><a href="#donors">Donors</a></li>
           <li><a href="#mentors">Mentors</a></li> -->
-        <li><a href="login.php" class="btn-login">Login</a></li>
-        <li><a href="register.php" class="btn-register">Register</a></li>
+        <li><a href="login.php" style="background-color: #5a4ae3; color:white; padding: 8px 10px; border-radius: 5px;">Login</a></li>
+        <li><a href="register.php" style="background-color: #5a4ae3; color:white; padding: 8px 10px; border-radius: 5px;">Register</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <section id="hero" class="hero-section">
+    <?php include 'components/carousel.php'; ?>
+    <!-- <section id="hero" class="hero-section">
       <div
         class="hero-overlay"
         style="
@@ -112,38 +113,28 @@ if (isset($_SESSION['user_id'])) {
           <a href="register.php?type=mentor" class="btn btn-tertiary">I'm a Mentor</a>
           <a href="register.php?type=mentor" class="btn btn-tertiary">Examinations</a>
         </div>
+        Create a profile, showcase your achievements, and connect with
+        potential donors and mentors.
+        </p>
       </div>
-    </section>
-
-    <section id="features" class="features-section">
-      <h2>How It Works</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <i class="fas fa-user-graduate"></i>
-          <h3>For Students</h3>
-          <p>
-            Create a profile, showcase your achievements, and connect with
-            potential donors and mentors.
-          </p>
-        </div>
-        <div class="feature-card">
-          <i class="fas fa-hand-holding-heart"></i>
-          <h3>For Donors</h3>
-          <p>
-            Browse student profiles, make secure donations, and track the
-            impact of your contributions.
-          </p>
-        </div>
-        <div class="feature-card">
-          <i class="fas fa-chalkboard-teacher"></i>
-          <h3>For Mentors</h3>
-          <p>
-            Share your expertise, guide students, and make a lasting impact on
-            their educational journey.
-          </p>
-        </div>
+      <div class="feature-card">
+        <i class="fas fa-hand-holding-heart"></i>
+        <h3>For Donors</h3>
+        <p>
+          Browse student profiles, make secure donations, and track the
+          impact of your contributions.
+        </p>
       </div>
-    </section>
+      <div class="feature-card">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <h3>For Mentors</h3>
+        <p>
+          Share your expertise, guide students, and make a lasting impact on
+          their educational journey.
+        </p>
+      </div>
+      </div>
+    </section> -->
 
     <section id="impact" class="impact-section">
       <h2>Our Impact</h2>
@@ -162,6 +153,8 @@ if (isset($_SESSION['user_id'])) {
         </div>
       </div>
     </section>
+
+    <?php include 'components/news-carousel.php'; ?>
   </main>
 
   <footer>
@@ -198,6 +191,7 @@ if (isset($_SESSION['user_id'])) {
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/index.js"></script>
 </body>
 
 </html>

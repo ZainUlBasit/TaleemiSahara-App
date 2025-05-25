@@ -44,6 +44,7 @@ foreach ($scholarships as $scholarship) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,10 +160,16 @@ foreach ($scholarships as $scholarship) {
             color: var(--white);
             font-weight: 500;
             transition: background-color 0.3s ease;
+            border: var(--secondary-color) 2px solid;
         }
 
         .btn-create {
             background-color: var(--secondary-color);
+        }
+
+        .action-btn:hover {
+            background-color: white;
+            color: var(--secondary-color) !important;
         }
 
         .btn-view {
@@ -174,6 +181,7 @@ foreach ($scholarships as $scholarship) {
         }
     </style>
 </head>
+
 <body>
     <header>
         <nav class="navbar">
@@ -182,9 +190,7 @@ foreach ($scholarships as $scholarship) {
             </div>
             <ul class="nav-links">
                 <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#scholarships">My Scholarships</a></li>
-                <li><a href="#applications">Applications</a></li>
-                <li><a href="#messages">Messages</a></li>
+                <li><a href="#messages" class="action-btn btn-create" style="text-decoration: none; color: white;">Donate Now</a></li>
                 <li><a href="../logout.php">Logout</a></li>
             </ul>
         </nav>
@@ -195,19 +201,19 @@ foreach ($scholarships as $scholarship) {
             <div class="welcome-message">
                 Welcome, <?php echo htmlspecialchars($donor['name']); ?>!
             </div>
-            <div class="dashboard-actions">
+            <!-- <div class="dashboard-actions">
                 <a href="create-scholarship.php" class="action-btn btn-create">Create Scholarship</a>
-            </div>
+            </div> -->
         </div>
 
         <div class="dashboard-stats">
             <div class="stat-card">
                 <h3><?php echo count($scholarships); ?></h3>
-                <p>Scholarships Created</p>
+                <p>Total Students</p>
             </div>
             <div class="stat-card">
                 <h3>$<?php echo number_format($total_amount); ?></h3>
-                <p>Total Amount Pledged</p>
+                <p>Total Donations</p>
             </div>
             <div class="stat-card">
                 <h3><?php echo $students_supported; ?></h3>
@@ -218,10 +224,18 @@ foreach ($scholarships as $scholarship) {
         <div class="dashboard-grid">
             <!-- Active Scholarships -->
             <div class="dashboard-card">
-                <h3>My Scholarships</h3>
+                <h3>My Donations</h3>
                 <ul class="scholarship-list">
                     <?php if (empty($scholarships)): ?>
-                        <li>No scholarships created yet</li>
+                        <li>No donations <div class="media">
+                                <a class="d-flex" href="#">
+                                    <img src="" alt="">
+                                </a>
+                                <div class="media-body">
+                                    <h5>Media heading</h5>
+
+                                </div>
+                            </div> yet</li>
                     <?php else: ?>
                         <?php foreach ($scholarships as $scholarship): ?>
                             <li>
@@ -240,32 +254,11 @@ foreach ($scholarships as $scholarship) {
                 </ul>
             </div>
 
-            <!-- Recent Applications -->
-            <div class="dashboard-card">
-                <h3>Recent Applications</h3>
-                <ul class="application-list">
-                    <?php if (empty($applications)): ?>
-                        <li>No applications received yet</li>
-                    <?php else: ?>
-                        <?php foreach ($applications as $application): ?>
-                            <li>
-                                <div class="application-info">
-                                    <h4><?php echo htmlspecialchars($application['student_name']); ?></h4>
-                                    <p>Scholarship: <?php echo htmlspecialchars($application['scholarship_name']); ?></p>
-                                    <p>Applied: <?php echo date('M d, Y', strtotime($application['applied_date'])); ?></p>
-                                    <span class="status-badge status-<?php echo strtolower($application['status']); ?>">
-                                        <?php echo ucfirst($application['status']); ?>
-                                    </span>
-                                    <a href="review-application.php?id=<?php echo $application['id']; ?>" class="action-btn btn-review">Review</a>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </ul>
-            </div>
+
         </div>
     </div>
 
     <script src="../js/main.js"></script>
 </body>
-</html> 
+
+</html>

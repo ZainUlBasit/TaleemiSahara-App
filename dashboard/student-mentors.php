@@ -63,6 +63,7 @@ $unread_messages = $stmt->get_result()->fetch_assoc()['unread'];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -177,6 +178,7 @@ $unread_messages = $stmt->get_result()->fetch_assoc()['unread'];
         }
     </style>
 </head>
+
 <body>
     <header>
         <nav class="navbar">
@@ -188,7 +190,6 @@ $unread_messages = $stmt->get_result()->fetch_assoc()['unread'];
                 <li><a href="student-profile.php">Profile</a></li>
                 <li><a href="student-scholarships.php">Scholarships</a></li>
                 <li><a href="student-mentors.php" class="active">Mentors</a></li>
-                <li><a href="student-messages.php" class="notification-badge" data-count="<?php echo $unread_messages; ?>">Messages</a></li>
                 <li><a href="../logout.php">Logout</a></li>
             </ul>
         </nav>
@@ -288,4 +289,5 @@ $unread_messages = $stmt->get_result()->fetch_assoc()['unread'];
 
     <script src="../js/main.js"></script>
 </body>
-</html> 
+
+</html>
