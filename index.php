@@ -485,33 +485,8 @@
 </head>
 
 <body>
-  <div class="navbar-wrapper">
-    <div class="navbar">
-      <img src="./images/logo.png" alt="not found!" style="width: 150px" />
-      <ul>
-        <li><a href="#home" class="raleway-400">Home</a></li>
-        <li><a href="#our-mission" class="raleway-400">Our Mission</a></li>
-        <li><a href="#our-impacts" class="raleway-400">Our Impacts</a></li>
-        <li><a href="#our-team" class="raleway-400">Our Teams</a></li>
-        <li><a href="#news" class="raleway-400">News</a></li>
-        <!-- <li><a href="#" class="raleway-400">Blogs</a></li> -->
-        <li>
-          <!-- From Uiverse.io by satyamchaudharydev -->
-          <!-- From Uiverse.io by lenfear23 -->
-          <button class="auth-btn raleway-600">
-            Login
-          </button>
-        </li>
-        <li>
-          <!-- From Uiverse.io by satyamchaudharydev -->
-          <!-- From Uiverse.io by lenfear23 -->
-          <button class="auth-btn raleway-600">
-            Register
-          </button>
-        </li>
-      </ul>
-    </div>
-  </div>
+  <?php include 'components/navbar.php'; ?>
+
   <div class="main">
     <?php include 'components/carousel.php'; ?>
     <div class="" id="our-mission" style="width: 100%; padding:100px;border-top: 10px solid #465462;  background-color: aliceblue;">
