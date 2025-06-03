@@ -1,16 +1,14 @@
 <?php
-$images = [
-    './images/bgimage.jpg',
-    './images/bgimage.jpg',
-    './images/bgimage.jpg',
-];
+$images = [];
+for ($i = 1; $i <= 10; $i++) {
+    $images[] = "./images/{$i}.jpeg";
+}
 ?>
 
 <style>
     .custom-carousel {
         width: 100vw;
         position: relative;
-        max-width: 1500px;
         margin: 0 auto;
         height: 100vh;
         overflow: hidden;
@@ -81,7 +79,7 @@ $images = [
     }
 </style>
 
-<div class="custom-carousel">
+<div id="home" class="custom-carousel">
     <div
         class="hero-overlay"
         style="
@@ -93,32 +91,31 @@ $images = [
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.5;
+            opacity: 0.6;
             z-index: 1;
           "></div>
 
     <div class="hero-content" style="position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <h1 style="color: white">Connecting Dreams to Reality</h1>
-        <p style="color: white">
-            Join our platform to connect students with donors and mentors,
-            making quality education accessible to all.
+        <h1 style="color: white; font-size: 4.5rem; text-transform: capitalize; max-width: 950px; width: 100%; text-align: center;">One contribution can empower countless dreams</h1>
+        <p style="color: white; font-size: 4ch; padding-top: 40px; text-align: center;">
+            HELP EDUCATE - DONATE NOW
         </p>
     </div>
 
     <div class="carousel-container">
         <?php foreach ($images as $index => $image): ?>
             <div class="carousel-slide">
-                <img src="<?php echo $image; ?>" alt="Slide <?php echo $index + 1; ?>">
+                <img src="<?php echo $image; ?>" alt="Slide <?php echo $index + 1; ?>" style="object-fit: center;" />
             </div>
         <?php endforeach; ?>
     </div>
 
     <div class="carousel-indicators">
-        <?php for ($i = 0; $i < count($images); $i++): ?>
-            <div class="carousel-indicator <?php echo $i === 0 ? 'active' : ''; ?>"
-                onclick="goToSlide(<?php echo $i; ?>)"></div>
-        <?php endfor; ?>
+        <?php foreach ($images as $index => $image): ?>
+            <button class="carousel-indicator <?php echo $index === 0 ? 'active' : ''; ?>" onclick="goToSlide(<?php echo $index; ?>)"></button>
+        <?php endforeach; ?>
     </div>
+
 </div>
 
 <script>

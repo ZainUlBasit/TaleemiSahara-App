@@ -140,8 +140,17 @@ $news_items = [
     }
 </style>
 
-<section class="news-section">
-    <h2>Latest News</h2>
+<section id="news" class=" news-section">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding-top: 2rem; padding-bottom: 1rem; background-color: aliceblue; margin-top: 0rem; border-top: 2px solid black;white-space: nowrap;">
+        <div style="font-size: 6rem; font-weight: bold; font-family: 'Quicksand', serif; padding: 0 2rem; text-align: center; max-width: 450px; font-size: 3rem;">
+            Latest
+            <span
+                style="font-family: 'Dancing Script', cursive; font-size: 7rem; max-width: 450px; font-size: 5rem; color: #96ADC5; text-shadow: 1px 1px 2px rgba(0, 0, 0, 1)">
+                News
+            </span>
+            !
+        </div>
+    </div>
     <div class="news-carousel">
         <div class="news-container">
             <?php foreach ($news_items as $news): ?>
