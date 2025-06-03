@@ -115,18 +115,19 @@
 
     .auth-btn {
         border: 3px solid #465462;
-        background-color: transparent;
+        background-color: white;
         font-size: 1rem;
-        padding: 5px 20px;
+        padding: 8px 20px;
         border-radius: 5px;
         font-family: "Quicksand";
+        font-weight: 900;
         transition: all 1s ease-in-out;
         cursor: pointer;
         color: black;
     }
 
     .auth-btn:hover {
-        background-color: black;
+        background-color: #465462;
         color: white;
     }
 </style>
