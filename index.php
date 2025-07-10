@@ -1,3 +1,127 @@
+<?php
+session_start();
+require_once 'config/database.php';
+
+if (isset($_SESSION['user_id'])) {
+  switch ($_SESSION['user_type']) {
+    case 'student':
+      header("Location: student/dashboard.php");
+      exit();
+    case 'admin':
+      header("Location: admin/dashboard.php");
+      exit();
+    case 'donor':
+      header("Location: donor/dashboard.php");
+      exit();
+    case 'mentor':
+      header("Location: dashboard/mentor.php");
+      exit();
+    default:
+      header("Location: index.php");
+      exit();
+  }
+}
+
+$error = '';
+
+if (isset($_POST['submit']) && $_POST['submit'] === 'login-submit') {
+
+  $error = '';
+
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = sanitize($_POST['email']);
+    $password = sanitize($_POST['password']);
+
+    if (empty($email) || empty($password)) {
+      $error = "All fields are required";
+    } else {
+      // Get user from database
+      $stmt = $conn->prepare("SELECT id, name, email, password, user_type FROM users WHERE email = ?");
+      $stmt->bind_param("s", $email);
+      $stmt->execute();
+      $result = $stmt->get_result();
+
+      if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+
+        if (verifyPassword($password, $user['password'])) {
+          // Set session variables
+          $_SESSION['user_id'] = $user['id'];
+          $_SESSION['user_name'] = $user['name'];
+          $_SESSION['user_email'] = $user['email'];
+          $_SESSION['user_type'] = $user['user_type'];
+
+          // Redirect based on user type
+          switch ($user['user_type']) {
+            case 'student':
+              header("Location: dashboard/student.php");
+              break;
+            case 'donor':
+              header("Location: dashboard/donor.php");
+              break;
+            case 'mentor':
+              header("Location: dashboard/mentor.php");
+              break;
+            default:
+              header("Location: index.php");
+          }
+          exit();
+        } else {
+          $error = "Invalid email or password";
+        }
+      } else {
+        $error = "Invalid email or password";
+      }
+      $stmt->close();
+    }
+  }
+}
+if (isset($_POST['submit']) && $_POST['submit'] === 'register-submit') {
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Sanitize input
+    $name = sanitize($_POST['name']);
+    $email = sanitize($_POST['email']);
+    $password = sanitize($_POST['password']);
+    $confirm_password = sanitize($_POST['confirm_password']);
+    $user_type = sanitize($_POST['user_type']);
+
+    // Validate input
+    if (empty($name) || empty($email) || empty($password) || empty($user_type)) {
+      $error = "All fields are required";
+    } elseif ($password !== $confirm_password) {
+      $error = "Passwords do not match";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $error = "Invalid email format";
+    } else {
+      // Hash the password
+      $hashed_password = hashPassword($password);
+
+      // Prepare the SQL statement based on user type
+      if ($user_type === "student") {
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password, user_type) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $email, $hashed_password, $user_type);
+      } else if ($user_type === "donor") {
+        // Prepare for donor type if needed
+        // Example: $stmt = $conn->prepare("INSERT INTO users (name, email, password, user_type, organization) VALUES (?, ?, ?, ?, ?)");
+        // $stmt->bind_param("sssss", $name, $email, $hashed_password, $user_type, $organization);
+      } else if ($user_type === "mentor") {
+        // Prepare for mentor type if needed
+      }
+
+      // Execute the statement
+      if ($stmt->execute()) {
+        $success = "Registration successful! Please login.";
+        header("refresh:2;url=index.php");
+      } else {
+        $error = "Registration failed. Please try again.";
+      }
+      $stmt->close();
+    }
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,14 +136,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet" />
 
 
-  <link rel="stylesheet" href="./css/font.css">
-  <link rel="stylesheet" href="./css/style.css">
+  <!-- <link rel="stylesheet" href="./css/font.css"> -->
+  <!-- <link rel="stylesheet" href="./css/style.css"> -->
   <style>
     * {
       box-sizing: border-box;
       padding: 0;
       margin: 0;
-      font-family: "Raleway", sans-serif;
+      font-family: "Quicksand", sans-serif;
     }
 
     ul {
@@ -521,7 +645,7 @@
         <div style="font-size: 6rem; font-weight: bold; font-family: 'Quicksand', serif; padding: 0 2rem; text-align: center; font-size: 3rem;">
           Our
           <span
-            style="font-family: 'Dancing Script', cursive; font-size: 7rem; max-width: 450px; font-size: 5rem; color: #96ADC5; text-shadow: 1px 1px 2px rgba(0, 0, 0, 1)">
+            style="font-family: 'Dancing Script', cursive; font-size: 5rem; max-width: 450px; color: #96ADC5; text-shadow: 1px 1px 2px rgba(0, 0, 0, 1)">
             Impact
           </span>
           !
@@ -530,7 +654,7 @@
       <div class="impact-stats">
 
         <div style="text-align: center; color: white; background: #465462; border: 5px solid #96ADC5; padding: 1.5rem 2.5rem; border-radius: 20px; width: 80%;">
-          <div style="font-size: 2rem; font-weight: bold; font-family: \'Quicksand\', serif;">
+          <div style="font-size: 2rem; font-weight: bold; font-family: 'Quicksand', serif;">
             1000 +
           </div>
           <div style="font-size: 1rem; font-weight: 300; white-space: nowrap;">
@@ -538,7 +662,7 @@
           </div>
         </div>
         <div style="text-align: center; color: white; background: #465462; border: 5px solid #96ADC5; padding: 1.5rem 2.5rem; border-radius: 20px; width: 80%;">
-          <div style="font-size: 2rem; font-weight: bold; font-family: \'Quicksand\', serif;">
+          <div style="font-size: 2rem; font-weight: bold; font-family: 'Quicksand', serif;">
             500 +
           </div>
           <div style="font-size: 1rem; font-weight: 300; white-space: nowrap;">
@@ -546,7 +670,7 @@
           </div>
         </div>
         <div style="text-align: center; color: white; background: #465462; border: 5px solid #96ADC5; padding: 1.5rem 2.5rem; border-radius: 20px; width: 80%;">
-          <div style="font-size: 2rem; font-weight: bold; font-family: \'Quicksand\', serif;">
+          <div style="font-size: 2rem; font-weight: bold; font-family: 'Quicksand', serif;">
             200 +
           </div>
           <div style="font-size: 1rem; font-weight: 300; white-space: nowrap;">
@@ -566,40 +690,41 @@
           !
         </div>
       </div>
-      <div style="display: flex; gap:20px; justify-content: center;  align-items: center; background-color: aliceblue; padding: 20px; flex-wrap: wrap;">
+      <div style="display: flex; gap:20px; justify-content: center;  align-items: center; background-color: aliceblue; padding: 20px; flex-wrap: wrap;" id="team-me">
         <?php
-        $teamMembers = [
-          [
-            'name' => 'Hina 1',
-            'role' => 'Founder / CEO',
-            'image' => './images/5.jpeg',
-          ],
-          [
-            'name' => 'Hina 2',
-            'role' => 'Co-Founder',
-            'image' => './images/5.jpeg',
-          ],
-          [
-            'name' => 'Hina',
-            'role' => 'Director',
-            'image' => './images/5.jpeg',
-          ],
-        ];
+        // Fetch team members from database
+        try {
+          $stmt = $conn->prepare("SELECT name, role, image FROM team_members WHERE status = 'active' ORDER BY created_at ASC");
+          $stmt->execute();
+          $result = $stmt->get_result();
+          $teamMembers = $result->fetch_all(MYSQLI_ASSOC);
+          $stmt->close();
+        } catch (mysqli_sql_exception $e) {
+          // If table doesn't exist or error occurs, use empty array
+          $teamMembers = [];
+        }
 
-        foreach ($teamMembers as $member) {
-          echo '<div style="width: 400px; height: 400px; position: relative;">';
-          echo '<img src="' . $member['image'] . '" alt="" style="border-radius: 100%; width: 400px; height: 400px; object-fit: cover; border: 10px solid #96ADC5">';
-          echo '<div style="width: 100%; position: absolute; bottom: -5px; left: 0; height: fit-content; display: flex; justify-content: center;">';
-          echo '<div style="text-align: center; color: white; background: #465462; border: 5px solid #96ADC5; padding: 1.5rem 2.5rem; border-radius: 20px; width: 80%;">';
-          echo '<div style="font-size: 1.2rem; font-weight: bold; font-family: \'Quicksand\', serif;">';
-          echo $member['name'];
+        // If no team members found, show a message
+        if (empty($teamMembers)) {
+          echo '<div style="text-align: center; width: 100%; padding: 40px; color: #465462; font-size: 1.2rem;">';
+          echo 'Our team information is being updated. Please check back soon!';
           echo '</div>';
-          echo '<div style="font-size: 1rem; font-weight: 300; white-space: nowrap;">';
-          echo $member['role'];
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
+        } else {
+          foreach ($teamMembers as $member) {
+            echo '<div style="width: 400px; height: 400px; position: relative;">';
+            echo '<img src="' . str_replace('./uploads', './admin/uploads', htmlspecialchars($member['image'])) . '" alt="' . htmlspecialchars($member['name']) . '" style="border-radius: 100%; width: 400px; height: 400px; object-fit: cover; border: 10px solid #96ADC5">';
+            echo '<div style="width: 100%; position: absolute; bottom: -5px; left: 0; height: fit-content; display: flex; justify-content: center;">';
+            echo '<div style="text-align: center; color: white; background: #465462; border: 5px solid #96ADC5; padding: 1.5rem 2.5rem; border-radius: 20px; width: 80%;">';
+            echo '<div style="font-size: 1.2rem; font-weight: bold; font-family: \'Quicksand\', serif;">';
+            echo htmlspecialchars($member['name']);
+            echo '</div>';
+            echo '<div style="font-size: 1rem; font-weight: 300; white-space: nowrap;">';
+            echo htmlspecialchars($member['role']);
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+          }
         }
         ?>
       </div>
@@ -633,7 +758,7 @@
       <div class="modal-content">
         <span class="modal-close" onclick="closeLoginModal()">&times;</span>
         <h2 style="margin-bottom: 1.5rem; color: #465462;">Login</h2>
-        <form class="login-form">
+        <form class="login-form" method="POST" action="">
           <div class="form-group">
             <label for="login-role">Role</label>
             <select id="login-role" name="role" required onchange="showLoginRoleFields(this.value)">
@@ -685,8 +810,8 @@
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
           </div>
-          <a href="#" class="forgot-password">Forgot Password?</a>
-          <button type="submit" class="login-submit">Login</button>
+          <a href="forgot-password.php" class="forgot-password">Forgot Password?</a>
+          <button type="submit" name="submit" value="login-submit" class="login-submit">Login</button>
           <div class="switch-form">
             Don't have an account? <a href="#" onclick="switchToRegister()">Register here</a>
           </div>
@@ -698,7 +823,7 @@
       <div class="modal-content">
         <span class="modal-close" onclick="closeRegisterModal()">&times;</span>
         <h2 style="margin-bottom: 1.5rem; color: #465462;">Register</h2>
-        <form class="register-form">
+        <form class="register-form" method="POST" action="">
           <div class="form-group">
             <label for="register-role">Role</label>
             <select id="register-role" name="role" required onchange="showRegisterRoleFields(this.value)">
@@ -717,11 +842,11 @@
               <input type="text" id="register-student-id" name="student_id">
             </div>
             <div class="form-group">
-              <label for="register-grade">Grade/Class</label>
+              <label for="register-grade">Department</label>
               <input type="text" id="register-grade" name="grade">
             </div>
             <div class="form-group">
-              <label for="register-school">School/College</label>
+              <label for="register-school">Semester</label>
               <input type="text" id="register-school" name="school">
             </div>
           </div>
@@ -761,10 +886,6 @@
           <!-- Donor Fields -->
           <div id="register-donor-fields" class="role-specific-fields">
             <div class="form-group">
-              <label for="register-donor-id">Donor ID</label>
-              <input type="text" id="register-donor-id" name="donor_id">
-            </div>
-            <div class="form-group">
               <label for="register-organization">Organization (if any)</label>
               <input type="text" id="register-organization" name="organization">
             </div>
@@ -795,7 +916,7 @@
             <label for="confirm-password">Confirm Password</label>
             <input type="password" id="confirm-password" name="confirm-password" required>
           </div>
-          <button type="submit" class="register-submit">Register</button>
+          <button type="submit" name="submit" value="register-submit" class="register-submit">Register</button>
           <div class="switch-form">
             Already have an account? <a href="#" onclick="switchToLogin()">Login here</a>
           </div>
@@ -887,15 +1008,82 @@
         }
       });
 
-      // Add click events to buttons
-      document.querySelectorAll('.auth-btn').forEach(button => {
-        button.addEventListener('click', function() {
-          if (this.textContent.trim() === 'Login') {
-            openLoginModal();
-          } else if (this.textContent.trim() === 'Register') {
-            openRegisterModal();
+      // // Add click events to buttons
+      // document.querySelectorAll('.auth-btn').forEach(button => {
+      //   button.addEventListener('click', function() {
+      //     if (this.textContent.trim() === 'Login') {
+      //       openLoginModal();
+      //     } else if (this.textContent.trim() === 'Register') {
+      //       openRegisterModal();
+      //     }
+      //   });
+      // });
+
+      // Handle form submissions
+      document.querySelector('.login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = new FormData(this);
+        formData.append('submit', 'login-submit');
+
+        // Submit form using fetch
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      });
+
+      document.querySelector('.register-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = new FormData(this);
+        formData.append('submit', 'register-submit');
+
+        // Validate passwords match
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm-password');
+
+        if (password !== confirmPassword) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'error-message';
+          errorDiv.style.color = 'red';
+          errorDiv.style.marginBottom = '1rem';
+          errorDiv.textContent = 'Passwords do not match';
+
+          // Remove any existing error messages
+          const existingError = document.querySelector('.error-message');
+          if (existingError) {
+            existingError.remove();
           }
-        });
+
+          // Add the error message to the form
+          this.insertBefore(errorDiv, this.firstChild);
+          return;
+        }
+
+        // Submit form using fetch
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
       });
     </script>
 </body>

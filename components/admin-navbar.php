@@ -134,25 +134,26 @@
 
 <div class="navbar-wrapper">
     <div class="navbar">
-        <img src="./images/logo.png" alt="not found!" style="width: 150px" />
+        <img src="../images/logo.png" alt="not found!" style="width: 150px" />
         <ul>
-            <li><a href="./index.php" class="raleway-400">Home</a></li>
-            <li><a href="./index.php#our-mission" class="raleway-400">Our Mission</a></li>
-            <li><a href="./index.php#our-impacts" class="raleway-400">Our Impacts</a></li>
-            <li><a href="./index.php#our-team" class="raleway-400">Our Teams</a></li>
-            <li><a href="./our-media.php" class="raleway-400">Our Media</a></li>
-            <li><a href="./index.php#news" class="raleway-400">News</a></li>
-            <!-- <li><a href="#" class="raleway-400">Blogs</a></li> -->
+            <li><a href="../admin/dashboard.php" class="raleway-400">Dashboard</a></li>
+            <li><a href="../admin/students.php" class="raleway-400">Students</a></li>
+            <li><a href="../admin/donors.php" class="raleway-400">Donors</a></li>
+            <li><a href="../admin/donations.php" class="raleway-400">Donations</a></li>
+            <li><a href="../admin/available_scholarships.php" class="raleway-400">Scholarships</a></li>
+            <li><a href="../admin/our_news.php" class="raleway-400">Our News</a></li>
+            <li><a href="../admin/our_team.php" class="raleway-400">Our Team</a></li>
+            <li><a href="../admin/manage_videos.php" class="raleway-400">Our Videos</a></li>
+
             <li>
                 <!-- From Uiverse.io by satyamchaudharydev -->
                 <!-- From Uiverse.io by lenfear23 -->
                 <button class="auth-btn raleway-600">
-                    <a href="./login.php">
-                        Login
+                    <a href="../logout.php">
+                        Logout
                     </a>
                 </button>
             </li>
-
         </ul>
     </div>
 </div>

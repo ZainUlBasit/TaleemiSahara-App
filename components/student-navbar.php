@@ -134,25 +134,22 @@
 
 <div class="navbar-wrapper">
     <div class="navbar">
-        <img src="./images/logo.png" alt="not found!" style="width: 150px" />
+        <img src="../images/logo.png" alt="not found!" style="width: 150px" />
         <ul>
-            <li><a href="./index.php" class="raleway-400">Home</a></li>
-            <li><a href="./index.php#our-mission" class="raleway-400">Our Mission</a></li>
-            <li><a href="./index.php#our-impacts" class="raleway-400">Our Impacts</a></li>
-            <li><a href="./index.php#our-team" class="raleway-400">Our Teams</a></li>
-            <li><a href="./our-media.php" class="raleway-400">Our Media</a></li>
-            <li><a href="./index.php#news" class="raleway-400">News</a></li>
-            <!-- <li><a href="#" class="raleway-400">Blogs</a></li> -->
+            <li><a href="../student/dashboard.php" class="raleway-400">Dashboard</a></li>
+            <li><a href="../student/scholarships.php" class="raleway-400">Available Scholarships</a></li>
+            <li><a href="../student/my_applications.php" class="raleway-400">My Applications</a></li>
+            <li><a href="../student/student_profile.php" class="raleway-400">My Profile</a></li>
+
             <li>
                 <!-- From Uiverse.io by satyamchaudharydev -->
                 <!-- From Uiverse.io by lenfear23 -->
                 <button class="auth-btn raleway-600">
-                    <a href="./login.php">
-                        Login
+                    <a href="../logout.php">
+                        Logout
                     </a>
                 </button>
             </li>
-
         </ul>
     </div>
 </div>

@@ -1,3 +1,22 @@
+<?php
+require_once 'config/database.php';
+
+// Fetch all active videos from the database
+$videos = [];
+$error_message = '';
+try {
+    $sql = "SELECT * FROM videos WHERE status = 'active' ORDER BY created_at DESC";
+    $result = $conn->query($sql);
+    if ($result) {
+        $videos = $result->fetch_all(MYSQLI_ASSOC);
+    } else {
+        // This will help in debugging if the query fails but doesn't throw an exception
+        $error_message = 'Error fetching videos: ' . $conn->error;
+    }
+} catch (Exception $e) {
+    $error_message = 'Database error: ' . $e->getMessage();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -127,7 +146,7 @@
         .frame-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            place-items: center;
+            place-items: start;
             gap: 50px;
             padding: 50px;
             max-width: 1400px;
@@ -138,22 +157,89 @@
             .frame-container {
                 grid-template-columns: repeat(1, 1fr);
                 width: 100%;
-            }
-
-            .y-video {
-                width: 100%;
-            }
-
-            .ifreav {
-                width: 100%;
+                padding: 20px;
             }
         }
 
-        .y-video {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .video-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             width: 100%;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            /* 16:9 aspect ratio */
+            background: #000;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 1.4em;
+            color: #333;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .video-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .video-category {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .video-date {
+            color: #6c757d;
+        }
+
+        .no-videos-message {
+            grid-column: 1 / -1;
+            /* Span across all columns */
+            text-align: center;
+            padding: 50px;
+            background: #f8f9fa;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -172,54 +258,45 @@
     </div>
 
     <div class="frame-container">
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div class="y-video">
-            <div class="" style="font-size: 1.2rem; font-family: Quicksand; font-weight: 600;">How do your donations help students?</div>
-            <iframe width="100%" height="315" src="https://www.youtube.com/embed/QHCy8fP1py8?si=xWNRPhiQbb5PDrt4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
+        <?php if (!empty($videos)): ?>
+            <?php foreach ($videos as $video): ?>
+                <div class="video-card">
+                    <div class="video-embed">
+                        <iframe src="<?php echo htmlspecialchars($video['embed_url']); ?>"
+                            title="<?php echo htmlspecialchars($video['title']); ?>"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title"><?php echo htmlspecialchars($video['title']); ?></h3>
+                        <?php if (!empty($video['description'])): ?>
+                            <p class="video-description"><?php echo nl2br(htmlspecialchars($video['description'])); ?></p>
+                        <?php endif; ?>
+                        <div class="video-meta">
+                            <?php if (!empty($video['category'])): ?>
+                                <span class="video-category"><?php echo ucfirst(htmlspecialchars($video['category'])); ?></span>
+                            <?php endif; ?>
+                            <span class="video-date">
+                                <?php echo date('F j, Y', strtotime($video['created_at'])); ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php elseif ($error_message): ?>
+            <div class="no-videos-message">
+                <h2>Error Loading Videos</h2>
+                <p><?php echo htmlspecialchars($error_message); ?></p>
+            </div>
+        <?php else: ?>
+            <div class="no-videos-message">
+                <h2>No Videos Available</h2>
+                <p>There are no videos to display at the moment. Please check back later!</p>
+            </div>
+        <?php endif; ?>
     </div>
     <?php include 'components/footer.php'; ?>
 
