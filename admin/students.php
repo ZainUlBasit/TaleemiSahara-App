@@ -48,6 +48,21 @@ $stmt->close();
             margin: 0;
         }
 
+        .export-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+        }
+
         .stats-card {
             background: white;
             border: 1px solid #ddd;
@@ -191,6 +206,7 @@ $stmt->close();
     <div class="students-container animate-fade-in">
         <div class="page-header">
             <h1 class="page-title">Students Management</h1>
+            <a href="export_students.php" class="export-btn">Export Students</a>
         </div>
 
         <!-- Statistics -->
